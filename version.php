@@ -18,13 +18,11 @@
  * Version details
  *
  * @package    filter
- * @subpackage urltolink
- * @copyright  2010 David Mudrak <david@moodle.com>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @subpackage urlopenext
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2017111300;        // The current plugin version (Date: YYYYMMDDXX)
+$plugin->version   = 2018050800;        // The current plugin version (Date: YYYYMMDDXX)
 $plugin->requires  = 2017110800;        // Requires this Moodle version
 $plugin->component = 'filter_urlopenext'; // Full name of the plugin (used for diagnostics)

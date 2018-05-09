@@ -19,9 +19,7 @@
  * Strings for filter_urltolink
  *
  * @package    filter
- * @subpackage urltolink
- * @copyright  2010 David Mudrak <david@moodle.com>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @subpackage urlopenext
  */
 
 defined('MOODLE_INTERNAL') || die();

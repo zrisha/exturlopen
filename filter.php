@@ -41,57 +41,30 @@ class filter_urlopenext extends moodle_text_filter {
     public function filter($text, array $options = array()) {
         global $CFG, $PAGE;
 
-        if (!is_string($text) or empty($text)) {
-            // non string data can not be filtered anyway
-            return $text;
+        $dom = new DOMDocument;
+        $dom->loadHTML($text);
+        $links = $dom->getElementsByTagName('a');
+
+        //Determine if external or internal
+        //Checks if url host matches with moodle hostt
+        foreach ($links as $link) {
+          $domain = parse_url($CFG->wwwroot);
+          $href = parse_url($link->getAttribute('href'));
+
+          if(!array_key_exists('host', $href))
+            continue;
+
+
+
+          if($domain['host'] !== $href['host']){
+            $alert = $dom->createElement('span', ' (new window)');
+            $alert->setAttribute('class', "url-alert");
+            $link->setAttribute('target', '_blank');
+            $link->appendChild($alert);
+          }
         }
-
-        if (stripos($text, '</a>') === false) {
-            // Performance shortcut - if there are no </a> tags, nothing can match.
-            return $text;
-        }
-
-        // Check SWF permissions.
-        $this->trusted = !empty($options['noclean']) or !empty($CFG->allowobjectembed);
-
-        //Find opening a tags and trigger callback
-        $result = preg_replace_callback('/(<a[^>]*>)/i', array($this, 'callback'), $text);
-
-        // Return the same string except processed by the above.
-        return $result;
+        $html = $dom->saveHTML();
+        return $html;
     }
 
-    /**
-     * Replace external link to open in new window.
-     *
-     * @param array $matches
-     * @return string
-     */
-    private function callback(array $matches) {
-
-        global $CFG, $PAGE;
-
-        if (strlen($matches[0]) > 4096) {
-          return null;
-        }
-
-        // Regex to find href of a tags
-        // $re = "<a\s+(?:[^>]*?\s+)?href=([\"'])(.*?)\1/";
-        $re = '/^<a.*?href=(["\'])(.*?)\1.*$/';
-
-        preg_match($re, $matches[0], $urlmatches);
-        $domain = parse_url($CFG->wwwroot);
-        $href = parse_url($urlmatches[2]);
-
-        if(!array_key_exists('host', $href))
-          return $matches[0];
-
-        error_log($href['host']);
-        
-        if($domain['host'] === $href['host']){
-          return $matches[0];
-        } else {
-          return preg_replace('/(<a\b[^><]*)>/i', '$1 target="_blank">', $matches[0]);
-        }
-      }
-    }
+  }
