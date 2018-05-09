@@ -42,7 +42,8 @@ class filter_urlopenext extends moodle_text_filter {
         global $CFG, $PAGE;
 
         $dom = new DOMDocument;
-        $dom->loadHTML($text);
+        $html_data  = mb_convert_encoding($text , 'HTML-ENTITIES', 'UTF-8');
+        $dom->loadHTML($html_data, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
         $links = $dom->getElementsByTagName('a');
 
         //Determine if external or internal
@@ -64,6 +65,7 @@ class filter_urlopenext extends moodle_text_filter {
           }
         }
         $html = $dom->saveHTML();
+        error_log($html);
         return $html;
     }
 
