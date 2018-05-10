@@ -93,12 +93,14 @@ class filter_urlopenext extends moodle_text_filter {
           if(!array_key_exists('host', $href))
             return $matches[0];
 
-          if($domain['host'] !== $href['host']){
-            $alert = $dom->createElement('span', ' (new window)');
-            $alert->setAttribute('class', "url-alert");
-            $link->setAttribute('target', '_blank');
-            $link->appendChild($alert);
-          }
+          if($domain['host'] === $href['host'])
+            return $matches[0];
+
+          $alert = $dom->createElement('span', ' (new window)');
+          $alert->setAttribute('class', "url-alert");
+          $link->setAttribute('target', '_blank');
+          $link->appendChild($alert);
+
         }
         $html = $dom->saveHTML();
         return $html;
