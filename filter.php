@@ -55,7 +55,7 @@ class filter_urlopenext extends moodle_text_filter {
         $this->trusted = !empty($options['noclean']) or !empty($CFG->allowobjectembed);
 
         //Find entire a tags and trigger callback
-        $result = preg_replace_callback('/<\s*a[^>]*>(.*?)<\s*\/\s*a>/', array($this, 'callback'), $text);
+        $result = preg_replace_callback('/<\s*a[^>]*>.*?<\s*\/\s*a>/i', array($this, 'callback'), $text);
 
         // Return the same string except processed by the above.
         return $result;
@@ -72,12 +72,12 @@ class filter_urlopenext extends moodle_text_filter {
 
         //Don't run if string excessively long
         if (strlen($matches[0]) > 4096) {
-          return null;
+          return $matches[0];
         }
 
         //Convert a tag string to php dom
         $dom = new DOMDocument;
-        $html_data  =  utf8_encode($matches[0]);
+        $html_data  =  mb_convert_encoding($matches[0], 'HTML-ENTITIES', 'UTF-8');
         $dom->loadHTML($html_data, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
         $links = $dom->getElementsByTagName('a');
 
@@ -87,8 +87,11 @@ class filter_urlopenext extends moodle_text_filter {
           $domain = parse_url($CFG->wwwroot);
           $href = parse_url($link->getAttribute('href'));
 
+          if($href === "")
+            return $matches[0];
+
           if(!array_key_exists('host', $href))
-            continue;
+            return $matches[0];
 
           if($domain['host'] !== $href['host']){
             $alert = $dom->createElement('span', ' (new window)');
