@@ -55,7 +55,7 @@ class filter_urlopenext extends moodle_text_filter {
         $this->trusted = !empty($options['noclean']) or !empty($CFG->allowobjectembed);
 
         //Find entire a tags and trigger callback
-        $result = preg_replace_callback('/<\s*a[^>]*>.*?<\s*\/\s*a>/i', array($this, 'callback'), $text);
+        $result = preg_replace_callback('/<\s*a[^>]*>[\s\S]*?<\s*\/\s*a>/i', array($this, 'callback'), $text);
 
         // Return the same string except processed by the above.
         return $result;
