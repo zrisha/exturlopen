@@ -95,8 +95,14 @@ class filter_urlopenext extends moodle_text_filter {
 
           if($domain['host'] !== $href['host']){
             $alert = $dom->createElement('span', ' (new window)');
-            $alert->setAttribute('class', "url-alert");
+            $alert->setAttribute('class', "sr-only");
+
+            $icon = $dom->createElement('i');
+            $icon->setAttribute('class', "icon fa fa fa-external-link");
+            $icon->setAttribute('style', "margin-left: .2rem;");
+
             $link->setAttribute('target', '_blank');
+            $link->appendChild($icon);
             $link->appendChild($alert);
             $html = $dom->saveHTML();
             return $html;
