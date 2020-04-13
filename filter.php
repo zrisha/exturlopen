@@ -99,7 +99,7 @@ class filter_urlopenext extends moodle_text_filter {
 
             $icon = $dom->createElement('i');
             $icon->setAttribute('class', "icon fa fa fa-external-link");
-            $icon->setAttribute('style', "margin-left: .2rem;");
+            $icon->setAttribute('style', "margin: 0 0 0 .2rem;");
 
             $link->setAttribute('target', '_blank');
             $link->appendChild($icon);
